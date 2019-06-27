@@ -8,9 +8,11 @@ module.exports = function(io, socket) {
     })
 
     socket.on('addMember', ({ meetingId, memberId, isAdmin }, cb) => {
-        socket.join(meetingId)
         controller.addMember({ meetingId, memberId, socketId: socket.id, isAdmin }).then(({ data }) => {
-            if(data) io.to(meetingId).emit('newMemberAdded', { meetingId, members: data.meeting.members })
+            if(data) {
+                socket.join(meetingId)
+                io.to(meetingId).emit('newMemberAdded', { meetingId, members: data.meeting.members })
+            }
         })
     })
 
