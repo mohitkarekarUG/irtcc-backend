@@ -11,12 +11,15 @@ module.exports = {
             return { error: 'Could not create meeting.' }
         })
     },
-    async addMember(meetingId, memberId) {
-        return await Meeting.findById(meetingId).then(async m => {
-            if(m.members.indexOf(memberId) === -1) {
-                m.members.push(memberId)
-                await m.save()
-                return { data: { meeting: m } }
+    addMember({ meetingId, memberId, socketId, isAdmin }) {
+        return Meeting.findById(meetingId).then(m => {
+            if(!m.members.find(m => m.memberId === memberId)) {
+                m.members.push({
+                    memberId,
+                    socketId,
+                    isAdmin
+                })
+                return m.save().then(() => ({ data: { meeting: m } }))
             } else {
                 return { error: 'Member already present.' }
             }
