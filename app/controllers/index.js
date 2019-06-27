@@ -1,6 +1,15 @@
 const Meeting = require('./../db/Meeting')
 
 module.exports = {
+    async getMeeting(meetingId) {
+        return await Meeting.findById(meetingId).then(meeting => {
+            if(meeting) return { data: meeting }
+            else return { error: 'Could not find meeting.' }
+        }).catch(e => {
+            console.log('Could not find meeting.', meetingId, e)
+            return { error: 'Could not find meeting.' }
+        })
+    },
     async createMeeting(meetingId) {
         return await Meeting.create({
             zoomId: meetingId

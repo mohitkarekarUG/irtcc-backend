@@ -7,7 +7,7 @@ module.exports = function(io, socket) {
         console.log('test')
     })
 
-    socket.on('addMember', ({ meetingId, memberId, isAdmin }) => {
+    socket.on('addMember', ({ meetingId, memberId, isAdmin }, cb) => {
         socket.join(meetingId)
         controller.addMember({ meetingId, memberId, socketId: socket.id, isAdmin }).then(({ data }) => {
             if(data) io.to(meetingId).emit('newMemberAdded', { meetingId, members: data.meeting.members })
@@ -15,14 +15,15 @@ module.exports = function(io, socket) {
     })
 
     socket.on('createInteration', ({ meetingId, type, data }) => {
-        socket.to(meetingId).emit('newInteraction', { type, data })
+        io.to(meetingId).emit('newInteraction', { type, data })
     })
 
     socket.on('updateData', ({ meetingId, type, data }) => {
         socket.to(meetingId).emit('dataUpdated', { type, data })
     })
 
-    socket.on('toggleControl', ({ meetingId, socketId }) => {
+    socket.on('toggleControl', ({ meetingId, memberId, socketId }) => {
         io.to(`${socketId}`).emit('toggleControl', { control })
+        io.to(meetingId).emit('toggleChanged', { memberId })
     })
 }
