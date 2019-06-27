@@ -22,7 +22,7 @@ module.exports = {
     },
     addMember({ meetingId, memberId, socketId, isAdmin }) {
         return Meeting.findById(meetingId).then(m => {
-            if(!m.members.find(m => m.memberId === memberId)) {
+            if(m && !m.members.find(m => m.memberId === memberId)) {
                 m.members.push({
                     memberId,
                     socketId,
@@ -30,7 +30,13 @@ module.exports = {
                 })
                 return m.save().then(() => ({ data: { meeting: m } }))
             } else {
-                return { error: 'Member already present.' }
+                m.members = m.members.map(mem => {
+                    if(mem && mem.memberId === memberId) {
+                        mem.socketId = socketId
+                    }
+                    return mem
+                })
+                return m.save().then(() => ({ data: { meeting: m } }))
             }
         }).catch(e => {
             console.error('Could not add member.', meetingId, memberId, e)

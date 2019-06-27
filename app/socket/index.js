@@ -2,21 +2,21 @@ const controller = require('./../controllers')
 module.exports = function(io, socket) {
     //events
     console.log('connection')
-
+    
     socket.on('test', () => {
         console.log('test')
     })
 
     socket.on('addMember', ({ meetingId, memberId, isAdmin }, cb) => {
         controller.addMember({ meetingId, memberId, socketId: socket.id, isAdmin }).then(({ data }) => {
-            if(data) {
-                socket.join(meetingId)
-                io.to(meetingId).emit('newMemberAdded', { meetingId, members: data.meeting.members })
-            }
+            console.log('Member added', memberId)
+            socket.join(meetingId)
+            io.to(meetingId).emit('newMemberAdded', { meetingId, members: data.meeting.members })
         })
     })
 
-    socket.on('createInteration', ({ meetingId, type, data }) => {
+    socket.on('createInteraction', ({ meetingId, type, data }) => {
+        console.log(type, data, meetingId)
         io.to(meetingId).emit('newInteraction', { type, data })
     })
 
