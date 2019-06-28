@@ -1,4 +1,5 @@
 const Meeting = require('./../db/Meeting')
+const zoom = require('./zoom')
 
 module.exports = {
     async getMeeting(meetingId) {
@@ -10,9 +11,16 @@ module.exports = {
             return { error: 'Could not find meeting.' }
         })
     },
-    async createMeeting(meetingId) {
+    async createMeeting(meetingTopic) {
+        
+        let activeUserId =  await zoom.getUserId();
+        console.log('activeUserId', activeUserId)
+
+        let meetingDetails = await zoom.createNewMeeting(activeUserId,'test test test');
         return await Meeting.create({
-            zoomId: meetingId
+            zoomId: meetingDetails.id,
+            zoomUrl: meetingDetails.join_url,
+            hostId: meetingDetails.host_id
         }).then(m => {
             return { data: { meeting: m } }
         }).catch(e => {
