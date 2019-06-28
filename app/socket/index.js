@@ -24,8 +24,8 @@ module.exports = function(io, socket) {
         socket.to(meetingId).emit('dataUpdated', { type, data })
     })
 
-    socket.on('toggleControl', ({ meetingId, memberId, socketId }) => {
-        io.to(`${socketId}`).emit('toggleControl', { control })
-        io.to(meetingId).emit('toggleChanged', { memberId })
+    socket.on('toggleControl', ({ meetingId, memberId }) => {
+        // io.to(`${socketId}`).emit('toggleControl', { memberId })
+        io.to(meetingId).emit('controlChanged', { memberId })
     })
 }
