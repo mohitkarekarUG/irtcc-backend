@@ -28,7 +28,7 @@ module.exports = {
                 return { error: 'Could not create meeting.' }
             })
         } catch(e) {
-            console.log(e)
+            console.log('Error in creating meeting.')
         }
     },
     addMember({ meetingId, memberId, socketId, isAdmin }) {
@@ -63,6 +63,7 @@ module.exports = {
         })
     },
     removeUser({ meetingId, memberId }) {
+        console.log('remove user')
         return Meeting.findById(meetingId).then(meeting => {
             let memberIdx = meeting.members.findIndex(m => m.memberId === memberId)
             if(memberIdx > -1) {

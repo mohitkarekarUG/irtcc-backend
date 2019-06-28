@@ -5,11 +5,12 @@ const instance = require('./../helpers/zoomInstance')
 module.exports = {
     async getUserId(){
         try{
-            let currentUserId = await instance.get('/users').then(currUser=>currUser);
+            let currentUserId = await instance.get('/users')
+            console.log('currentUserId', currentUserId)
             return currentUserId.data.users[0].id
         }
         catch(err){
-            console.log('err', err)
+            console.log('err')
         }
     },
     async createNewMeeting(userId, meetingTopic){
@@ -22,7 +23,7 @@ module.exports = {
             return meetingDetails.data
         }
         catch(err){
-            console.log('err', err)
+            console.log('err')
         }
     }
 }
