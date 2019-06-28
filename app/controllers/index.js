@@ -12,21 +12,24 @@ module.exports = {
         })
     },
     async createMeeting(meetingTopic) {
-        
-        let activeUserId =  await zoom.getUserId();
-        console.log('activeUserId', activeUserId)
+        try {
+            let activeUserId =  await zoom.getUserId();
 
-        let meetingDetails = await zoom.createNewMeeting(activeUserId,'test test test');
-        return await Meeting.create({
-            zoomId: meetingDetails.id,
-            zoomUrl: meetingDetails.join_url,
-            hostId: meetingDetails.host_id
-        }).then(m => {
-            return { data: { meeting: m } }
-        }).catch(e => {
-            console.error('Could not create meeting.', meetingId, e)
-            return { error: 'Could not create meeting.' }
-        })
+            let meetingDetails = await zoom.createNewMeeting(activeUserId, meetingTopic);
+            return await Meeting.create({
+                zoomId: meetingDetails.id,
+                zoomUrl: meetingDetails.join_url,
+                startUrl: meetingDetails.start_url,
+                hostId: meetingDetails.host_id
+            }).then(m => {
+                return { data: { meeting: m } }
+            }).catch(e => {
+                console.error('Could not create meeting.', meetingId, e)
+                return { error: 'Could not create meeting.' }
+            })
+        } catch(e) {
+            console.log(e)
+        }
     },
     addMember({ meetingId, memberId, socketId, isAdmin }) {
         return Meeting.findById(meetingId).then(m => {
