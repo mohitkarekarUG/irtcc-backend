@@ -59,6 +59,15 @@ module.exports = {
             return { error: 'Could not get memebers.' }
         })
     },
+    removeUser({ meetingId, memberId }) {
+        return Meeting.findById(meetingId).then(meeting => {
+            let memberIdx = meeting.members.findIndex(m => m.memberId === memberId)
+            if(memberIdx > -1) {
+                meeting.members.splice(memberIdx, 1)
+                return meeting.save()
+            }
+        })
+    },
     saveData(meetingId, data) {
         Meeting.findById(meetingId).then(m => {
             m.updates.push({

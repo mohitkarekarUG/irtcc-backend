@@ -8,6 +8,7 @@ const controller = require('./../controllers')
 //getMembers
 //saveData
 
+router.get('/meeting/:meetingId', async (req, res) => res.send(await controller.getMeeting(req.params.meetingId)))
 router.post('/meeting/create', async (req, res) => res.send(await controller.createMeeting(req.body.meetingTopic)))
 // router.post('/meeting/:meetingId/add-member', async (req, res) => res.send(await controller.addMember(req.params.meetingId, req.body.memberId)))
 router.get('/meeting/:meetingId/members', async (req, res) => res.send(await controller.getMembers(req.params.meetingId)))

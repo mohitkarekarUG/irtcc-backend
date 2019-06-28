@@ -28,4 +28,10 @@ module.exports = function(io, socket) {
         // io.to(`${socketId}`).emit('toggleControl', { memberId })
         io.to(meetingId).emit('controlChanged', { memberId })
     })
+
+    socket.on('disconnect', ({ meetingId, memberId }) => {
+        controller.removeUser({ meetingId, memberId }).then(() => {
+            socket.leave(meetingId)
+        })
+    })
 }
